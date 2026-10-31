@@ -1,6 +1,0 @@
-# Base de datos local: se crea sola al ejecutar servidor.py
-rymel.db
-
-# Archivos que Python genera automáticamente
-__pycache__/
-*.pyc
