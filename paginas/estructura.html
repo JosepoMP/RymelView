@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estructura · RymelView</title>
+  <link rel="stylesheet" href="/estilos/estilos.css">
+</head>
+<body>
+  <header id="encabezado" class="encabezado"></header>
+
+  <main>
+    <section class="seccion seccion-gris">
+      <div class="contenedor">
+        <div class="cabecera">
+          <div>
+            <p class="antetitulo">Módulo 5 · Estructura</p>
+            <h1 class="titulo">Visualizador de estructura.<br><span>Del producto a la materia prima.</span></h1>
+          </div>
+          <p>
+            Elige una referencia y una cantidad para ver todo lo que se necesita
+            para fabricarla, nivel por nivel.
+          </p>
+        </div>
+
+        <form id="formulario-estructura" class="filtros separado">
+          <label class="campo campo-ancho">
+            <span>Referencia</span>
+            <select name="referencia"></select>
+          </label>
+          <label class="campo">
+            <span>Cantidad a fabricar</span>
+            <input name="cantidad" type="number" min="1" step="any" value="1">
+          </label>
+          <button type="submit" class="boton">Ver estructura ↗</button>
+        </form>
+        <div id="aviso-estructura" class="aviso error separado" hidden></div>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <div class="contenedor">
+        <div id="estructura-vacia" class="estado-vacio">Elige una referencia para ver su estructura.</div>
+
+        <div id="resultado" hidden>
+          <div class="cabecera">
+            <div>
+              <p class="antetitulo">Árbol de producción</p>
+              <h2 class="titulo" id="titulo-resultado"></h2>
+            </div>
+            <div class="acciones">
+              <button type="button" class="boton boton-secundario" id="expandir-todo">Expandir todo</button>
+              <button type="button" class="boton boton-secundario" id="contraer-todo">Contraer todo</button>
+            </div>
+          </div>
+          <div class="leyenda">
+            <span><span class="etiqueta pt">PT</span> Producto terminado</span>
+            <span><span class="etiqueta pp">PP</span> Producto en proceso</span>
+            <span><span class="etiqueta mp">MP</span> Materia prima</span>
+          </div>
+
+          <!-- comun.js dibuja aquí el árbol (listas dentro de listas) -->
+          <ul class="arbol" id="arbol"></ul>
+
+          <h3 class="subtitulo separado">Materia prima total <small>· para la cantidad indicada</small></h3>
+          <div class="tabla-contenedor">
+            <table class="tabla">
+              <thead>
+                <tr>
+                  <th>Ítem</th>
+                  <th>Descripción</th>
+                  <th class="numero">Requerida</th>
+                  <th class="numero">Existencia</th>
+                  <th>Unidad</th>
+                  <th>Disponibilidad</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-materia-prima"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="pie" class="pie"></footer>
+
+  <script src="/scripts/comun.js"></script>
+  <script src="/scripts/estructura.js"></script>
+</body>
+</html>

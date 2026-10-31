@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Órdenes de producción · RymelView</title>
+  <link rel="stylesheet" href="/estilos/estilos.css">
+</head>
+<body>
+  <header id="encabezado" class="encabezado"></header>
+
+  <main>
+    <section class="seccion seccion-gris">
+      <div class="contenedor">
+        <div class="cabecera">
+          <div>
+            <p class="antetitulo">Órdenes de producción</p>
+            <h1 class="titulo">Qué se fabrica.<br><span>Y para quién.</span></h1>
+          </div>
+          <p>
+            Cada OP indica cuántas unidades debe entregar cada área.
+            Pendientes por entregar = unidades requeridas − unidades aprobadas.
+          </p>
+        </div>
+        <!-- Las pestañas solo se muestran al analista y al supervisor (los que pueden crear OP) -->
+        <div class="pestanas" id="pestanas" hidden>
+          <button type="button" class="pestana activa" data-panel="panel-consulta">Consultar OP</button>
+          <button type="button" class="pestana" data-panel="panel-creacion">Nueva OP</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <div class="contenedor">
+
+        <!-- ======================= Consulta ======================= -->
+        <div id="panel-consulta">
+          <div class="filtros">
+            <label class="campo">
+              <span>OP</span>
+              <input id="filtro-op" type="search" inputmode="numeric" placeholder="Número de OP">
+            </label>
+            <label class="campo">
+              <span>Cliente</span>
+              <input id="filtro-cliente" type="search" placeholder="Nombre o NIT">
+            </label>
+            <label class="campo">
+              <span>Área</span>
+              <select id="filtro-area"></select>
+            </label>
+            <label class="campo">
+              <span>Estado</span>
+              <select id="filtro-estado">
+                <option value="">Todos</option>
+                <option value="COMPLETA">Completa</option>
+                <option value="PENDIENTES">Con pendientes</option>
+              </select>
+            </label>
+          </div>
+          <p class="texto-gris separado" id="total-ordenes"></p>
+          <div class="tabla-contenedor">
+            <table class="tabla">
+              <thead>
+                <tr>
+                  <th>OP</th>
+                  <th>Cliente</th>
+                  <th>Ítem de ensamble</th>
+                  <th class="numero">A despachar</th>
+                  <th class="numero">Áreas completas</th>
+                  <th>Estado</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="tabla-ordenes"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ================ Creación (analista y supervisor) ================ -->
+        <div id="panel-creacion" hidden>
+          <div class="columnas">
+            <form id="formulario-orden" class="tarjeta formulario">
+              <p class="antetitulo">Nueva orden de producción</p>
+              <label class="campo">
+                <span>Número de OP</span>
+                <input name="numero" inputmode="numeric" required autocomplete="off">
+                <small>Se sugiere el siguiente número libre. No se puede repetir.</small>
+              </label>
+              <label class="campo">
+                <span>Ítem de ensamble</span>
+                <select name="referencia"></select>
+                <small>Solo se puede crear si su lista de materiales está completa.</small>
+              </label>
+              <label class="campo">
+                <span>Cantidad a despachar</span>
+                <input name="cantidad" type="number" min="1" step="1" value="1" required>
+              </label>
+              <label class="campo">
+                <span>Cliente</span>
+                <select name="cliente"></select>
+              </label>
+              <div>
+                <button type="button" class="boton boton-secundario boton-pequeno" id="boton-nuevo-cliente">+ Nuevo cliente</button>
+              </div>
+              <div id="aviso-orden" class="aviso" hidden></div>
+              <button type="submit" class="boton" id="boton-crear-orden" disabled>Crear OP ↗</button>
+            </form>
+
+            <!-- Vista previa: lo que se va a guardar -->
+            <div>
+              <p class="antetitulo">Confirma antes de guardar</p>
+              <div id="aviso-vista-previa" class="aviso error" hidden></div>
+              <div id="vista-previa-vacia" class="estado-vacio">Elige un ítem de ensamble para ver su estructura.</div>
+              <div id="vista-previa" hidden>
+                <h2 class="subtitulo" id="titulo-vista-previa"></h2>
+                <div class="tabla-contenedor">
+                  <table class="tabla">
+                    <thead>
+                      <tr>
+                        <th>Área</th>
+                        <th>Referencia</th>
+                        <th class="numero">Por unidad</th>
+                        <th class="numero">A producir</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tabla-vista-previa"></tbody>
+                  </table>
+                </div>
+                <h3 class="subtitulo separado">Estructura completa</h3>
+                <ul class="arbol" id="arbol-vista-previa"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== Ventana: detalle de una OP ===================== -->
+  <dialog id="dialogo-orden" class="dialogo ancho">
+    <div class="dialogo-cabecera">
+      <div>
+        <p class="antetitulo">Orden de producción</p>
+        <h2 class="titulo" id="detalle-titulo"></h2>
+        <p class="texto-gris" id="detalle-cliente"></p>
+      </div>
+      <button type="button" class="boton-icono" id="cerrar-detalle" title="Cerrar">✕</button>
+    </div>
+
+    <dl class="datos-clave">
+      <div><dt>Ítem de ensamble</dt><dd id="detalle-ensamble"></dd></div>
+      <div><dt>A despachar</dt><dd id="detalle-cantidad"></dd></div>
+      <div><dt>Creada</dt><dd id="detalle-creada"></dd></div>
+      <div><dt>Estado</dt><dd id="detalle-estado"></dd></div>
+    </dl>
+
+    <h3 class="subtitulo">Lista de materiales del ensamble</h3>
+    <div class="tabla-contenedor">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Ítem</th>
+            <th>Descripción</th>
+            <th class="numero">Por unidad</th>
+            <th class="numero">Total para la OP</th>
+          </tr>
+        </thead>
+        <tbody id="detalle-materiales"></tbody>
+      </table>
+    </div>
+
+    <h3 class="subtitulo">Avance por área <small>· en unidades</small></h3>
+    <div class="tabla-contenedor">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Área</th>
+            <th>Ítem de proceso</th>
+            <th class="numero">Requeridas</th>
+            <th class="numero">En revisión</th>
+            <th class="numero">Aprobadas</th>
+            <th class="numero">Rechazadas</th>
+            <th class="numero">Pendientes</th>
+          </tr>
+        </thead>
+        <tbody id="detalle-areas"></tbody>
+      </table>
+    </div>
+  </dialog>
+
+  <!-- ===================== Ventana: nuevo cliente ===================== -->
+  <dialog id="dialogo-cliente" class="dialogo angosto">
+    <div class="dialogo-cabecera">
+      <h2 class="titulo">Nuevo cliente</h2>
+      <button type="button" class="boton-icono" id="cerrar-cliente" title="Cerrar">✕</button>
+    </div>
+    <form id="formulario-cliente" class="formulario separado">
+      <label class="campo">
+        <span>NIT</span>
+        <input name="nit" required autocomplete="off" placeholder="900123456-7">
+      </label>
+      <label class="campo">
+        <span>Nombre o razón social</span>
+        <input name="nombre" required maxlength="150" autocomplete="off">
+      </label>
+      <div id="aviso-cliente" class="aviso error" hidden></div>
+      <button type="submit" class="boton">Guardar cliente</button>
+    </form>
+  </dialog>
+
+  <footer id="pie" class="pie"></footer>
+
+  <script src="/scripts/comun.js"></script>
+  <script src="/scripts/ordenes.js"></script>
+</body>
+</html>

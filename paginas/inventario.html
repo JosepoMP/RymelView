@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inventario · RymelView</title>
+  <link rel="stylesheet" href="/estilos/estilos.css">
+</head>
+<body>
+  <header id="encabezado" class="encabezado"></header>
+
+  <main>
+    <section class="seccion seccion-gris">
+      <div class="contenedor">
+        <div class="cabecera">
+          <div>
+            <p class="antetitulo">Módulo 6 · Inventarios</p>
+            <h1 class="titulo">Portal de inventarios.<br><span>Existencias y movimientos.</span></h1>
+          </div>
+          <p>
+            Consulta las existencias por tipo o por texto y abre el historial de entradas
+            y salidas de cada ítem.
+          </p>
+        </div>
+
+        <!-- Resumen: el id de cada número usa el tipo (MP, PP o PT) -->
+        <div class="indicadores separado">
+          <div class="indicador"><span>Materia prima</span><strong id="resumen-MP">–</strong><small id="resumen-MP-cero"></small></div>
+          <div class="indicador"><span>Producto en proceso</span><strong id="resumen-PP">–</strong><small id="resumen-PP-cero"></small></div>
+          <div class="indicador"><span>Producto terminado</span><strong id="resumen-PT">–</strong><small id="resumen-PT-cero"></small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Solo el analista ve esta sección (inventario.js le quita el hidden) -->
+    <section class="seccion" id="seccion-entrada" hidden>
+      <div class="contenedor">
+        <p class="antetitulo">Registrar entrada de materia prima</p>
+        <form id="formulario-entrada" class="filtros">
+          <label class="campo">
+            <span>Ítem (MP)</span>
+            <select name="item"></select>
+          </label>
+          <label class="campo">
+            <span>Cantidad</span>
+            <input name="cantidad" type="number" min="0" step="any" required>
+          </label>
+          <label class="campo campo-ancho">
+            <span>Concepto</span>
+            <input name="concepto" maxlength="150" placeholder="Ej. Compra OC-1234">
+          </label>
+          <button type="submit" class="boton">Registrar entrada</button>
+        </form>
+        <div id="aviso-entrada" class="aviso separado" hidden></div>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <div class="contenedor">
+        <div class="filtros">
+          <label class="campo">
+            <span>Tipo</span>
+            <select id="filtro-tipo">
+              <option value="">Todos los tipos</option>
+              <option value="MP">MP · Materia prima</option>
+              <option value="PP">PP · Producto en proceso</option>
+              <option value="PT">PT · Producto terminado</option>
+            </select>
+          </label>
+          <label class="campo campo-ancho">
+            <span>Buscar ítem</span>
+            <input id="filtro-texto" type="search" placeholder="Código o descripción">
+          </label>
+          <!-- Descarga TODOS los ítems (MP, PP y PT), sin aplicar los filtros de la tabla -->
+          <!-- Patrón Estrategia: el usuario elige el formato del archivo (ver exportar.py) -->
+          <label class="campo">
+            <span>Formato del archivo</span>
+            <select id="formato-inventario">
+              <option value="excel">Excel en español (;)</option>
+              <option value="estandar">CSV estándar (,)</option>
+            </select>
+          </label>
+          <a class="boton" id="enlace-exportar-inventario" href="/api/exportar/inventario?formato=excel" download>Exportar inventario a CSV ↗</a>
+        </div>
+        <p class="ayuda separado">La exportación incluye todos los ítems, también los que están en cero, sin importar los filtros.</p>
+        <div class="tabla-contenedor">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Descripción</th>
+                <th>Tipo</th>
+                <th class="numero">Existencia</th>
+                <th>Unidad</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tabla-existencias"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== Ventana: historial de un ítem ===================== -->
+  <dialog id="dialogo-historial" class="dialogo ancho">
+    <div class="dialogo-cabecera">
+      <div>
+        <p class="antetitulo">Historial de movimientos</p>
+        <h2 class="titulo" id="historial-codigo"></h2>
+        <p class="texto-gris" id="historial-descripcion"></p>
+      </div>
+      <button type="button" class="boton-icono" id="cerrar-historial" title="Cerrar">✕</button>
+    </div>
+
+    <dl class="datos-clave">
+      <div><dt>Total entradas</dt><dd id="historial-entradas"></dd></div>
+      <div><dt>Total salidas</dt><dd id="historial-salidas"></dd></div>
+      <div><dt>Existencia actual</dt><dd id="historial-existencia"></dd></div>
+    </dl>
+
+    <div class="tabla-contenedor separado">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th class="numero">Cantidad</th>
+            <th class="numero">Existencia</th>
+            <th>OP</th>
+            <th>Concepto</th>
+            <th>Usuario</th>
+          </tr>
+        </thead>
+        <tbody id="historial-movimientos"></tbody>
+      </table>
+    </div>
+  </dialog>
+
+  <footer id="pie" class="pie"></footer>
+
+  <script src="/scripts/comun.js"></script>
+  <script src="/scripts/inventario.js"></script>
+</body>
+</html>

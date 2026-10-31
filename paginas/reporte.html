@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reportar entrega · RymelView</title>
+  <link rel="stylesheet" href="/estilos/estilos.css">
+</head>
+<body>
+  <header id="encabezado" class="encabezado"></header>
+
+  <main>
+    <section class="seccion seccion-gris">
+      <div class="contenedor">
+        <div class="cabecera">
+          <div>
+            <p class="antetitulo" id="antetitulo-area">Módulo 1 · Reporte de entregas</p>
+            <h1 class="titulo">Reportar entrega.<br><span>Por orden de producción.</span></h1>
+          </div>
+          <p>
+            Escribe el número de OP para ver la referencia de tu área, sus materiales
+            y registrar lo que entregaste.
+          </p>
+        </div>
+
+        <form id="formulario-buscar" class="filtros separado">
+          <label class="campo">
+            <span>Número de OP</span>
+            <!-- list="lista-ordenes": al escribir, el navegador sugiere las OP que existen -->
+            <input class="entrada-grande" name="numero" list="lista-ordenes" inputmode="numeric"
+                   autocomplete="off" required placeholder="1001">
+          </label>
+          <button type="submit" class="boton">Consultar ↗</button>
+        </form>
+        <datalist id="lista-ordenes"></datalist>
+        <div id="aviso-buscar" class="aviso error separado" hidden></div>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <div class="contenedor">
+        <div id="sin-consulta" class="estado-vacio">Consulta una OP para ver qué le corresponde a tu área.</div>
+
+        <div id="resultado" hidden>
+          <p class="antetitulo">Orden de producción</p>
+          <h2 class="titulo" id="orden-titulo"></h2>
+          <p class="texto-gris" id="orden-descripcion"></p>
+
+          <div class="mitades separado">
+            <!-- Izquierda: la referencia del área y lo que consume -->
+            <article class="tarjeta">
+              <p class="antetitulo">Tu referencia</p>
+              <h3 class="titulo" id="referencia-codigo"></h3>
+              <p class="texto-gris" id="referencia-descripcion"></p>
+              <dl class="datos-clave">
+                <div><dt>Ítem que entregas</dt><dd id="referencia-item"></dd></div>
+                <div><dt>Unidad</dt><dd id="referencia-unidad"></dd></div>
+              </dl>
+              <h4 class="subtitulo">Materiales que se consumen</h4>
+              <div class="tabla-contenedor">
+                <table class="tabla">
+                  <thead>
+                    <tr>
+                      <th>Ítem</th>
+                      <th>Descripción</th>
+                      <th class="numero">Por unidad</th>
+                      <th class="numero">En esta entrega</th>
+                      <th>Unidad</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tabla-materiales"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <!-- Derecha: avance del área y formulario -->
+            <form id="formulario-entrega" class="tarjeta formulario">
+              <p class="antetitulo">Avance de tu área en esta OP</p>
+              <div class="indicadores">
+                <div class="indicador"><span>Requeridas</span><strong id="cantidad-requerida"></strong></div>
+                <div class="indicador"><span>Aprobadas</span><strong id="cantidad-aprobada"></strong></div>
+                <div class="indicador"><span>En revisión</span><strong id="cantidad-revision"></strong></div>
+                <div class="indicador destacado"><span>Por reportar</span><strong id="cantidad-disponible"></strong></div>
+              </div>
+              <label class="campo">
+                <span>Cantidad entregada</span>
+                <input class="entrada-grande" name="cantidad" type="number" min="1" step="1" inputmode="numeric" required>
+                <small>El reporte queda pendiente hasta que el analista lo apruebe.</small>
+              </label>
+              <div id="aviso-entrega" class="aviso" hidden></div>
+              <button type="submit" class="boton">Enviar reporte ↗</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion seccion-gris">
+      <div class="contenedor">
+        <div class="cabecera">
+          <div>
+            <p class="antetitulo">Historial</p>
+            <h2 class="titulo">Reportes de mi área</h2>
+          </div>
+          <label class="campo">
+            <span>Estado</span>
+            <select id="filtro-estado">
+              <option value="">Todos</option>
+              <option value="PENDIENTE">Pendiente</option>
+              <option value="APROBADO">Aprobado</option>
+              <option value="RECHAZADO">Rechazado</option>
+            </select>
+          </label>
+        </div>
+        <div class="tabla-contenedor separado">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Fecha</th>
+                <th>OP</th>
+                <th>Referencia</th>
+                <th class="numero">Cantidad</th>
+                <th>Estado</th>
+                <th>Observación</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-mis-reportes"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="pie" class="pie"></footer>
+
+  <script src="/scripts/comun.js"></script>
+  <script src="/scripts/reporte.js"></script>
+</body>
+</html>

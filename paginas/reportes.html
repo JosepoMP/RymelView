@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reportes · RymelView</title>
+  <link rel="stylesheet" href="/estilos/estilos.css">
+</head>
+<body>
+  <header id="encabezado" class="encabezado"></header>
+
+  <main>
+    <section class="seccion seccion-gris">
+      <div class="contenedor">
+        <div class="cabecera">
+          <div>
+            <p class="antetitulo">Reportes · Exportación</p>
+            <h1 class="titulo">Entregas aprobadas.<br><span>En CSV para Excel.</span></h1>
+          </div>
+          <p>
+            Filtra por fechas de aprobación y por área, revisa el resultado y descárgalo.
+            El inventario completo se exporta desde la página Inventario.
+          </p>
+        </div>
+
+        <form id="filtros-entregas" class="filtros separado">
+          <label class="campo">
+            <span>Aprobadas desde</span>
+            <input name="desde" type="date">
+          </label>
+          <label class="campo">
+            <span>Hasta</span>
+            <input name="hasta" type="date">
+          </label>
+          <label class="campo">
+            <span>Área</span>
+            <select name="area"></select>
+          </label>
+          <!-- Patrón Estrategia: el usuario elige el formato del archivo (ver exportar.py) -->
+          <label class="campo">
+            <span>Formato del archivo</span>
+            <select name="formato">
+              <option value="excel">Excel en español (;)</option>
+              <option value="estandar">CSV estándar (,)</option>
+            </select>
+          </label>
+          <!-- Es un enlace: el navegador descarga lo que responde el servidor en esa dirección.
+               reportes.js le pone la dirección según los filtros. -->
+          <a class="boton" id="enlace-exportar" href="#" download>Exportar a CSV ↗</a>
+        </form>
+        <div id="aviso-entregas" class="aviso error separado" hidden></div>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <div class="contenedor">
+        <p class="texto-gris" id="total-entregas"></p>
+        <div class="tabla-contenedor">
+          <table class="tabla">
+            <thead id="cabecera-entregas"></thead>
+            <tbody id="tabla-entregas"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="pie" class="pie"></footer>
+
+  <script src="/scripts/comun.js"></script>
+  <script src="/scripts/reportes.js"></script>
+</body>
+</html>

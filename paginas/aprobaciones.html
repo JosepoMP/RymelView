@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aprobaciones · RymelView</title>
+  <link rel="stylesheet" href="/estilos/estilos.css">
+</head>
+<body>
+  <header id="encabezado" class="encabezado"></header>
+
+  <main>
+    <section class="seccion seccion-gris">
+      <div class="contenedor">
+        <div class="cabecera">
+          <div>
+            <p class="antetitulo">Módulo 2 · Aprobación</p>
+            <h1 class="titulo">Entregas por revisar.<br><span>Aprobar o rechazar.</span></h1>
+          </div>
+          <p>
+            Al aprobar se descuentan los materiales consumidos y se suma el producto
+            entregado al inventario. Al rechazar no se mueve inventario.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <div class="contenedor">
+        <div class="filtros">
+          <label class="campo">
+            <span>Estado</span>
+            <select id="filtro-estado">
+              <option value="PENDIENTE">Pendiente</option>
+              <option value="APROBADO">Aprobado</option>
+              <option value="RECHAZADO">Rechazado</option>
+              <option value="">Todos</option>
+            </select>
+          </label>
+          <label class="campo">
+            <span>Área</span>
+            <select id="filtro-area"></select>
+          </label>
+          <label class="campo">
+            <span>OP</span>
+            <input id="filtro-op" type="search" inputmode="numeric" placeholder="Número de OP">
+          </label>
+        </div>
+        <p class="texto-gris separado" id="total-reportes"></p>
+        <div id="aviso-bandeja" class="aviso" hidden></div>
+        <div class="tabla-contenedor">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Fecha</th>
+                <th>OP</th>
+                <th>Área</th>
+                <th>Referencia</th>
+                <th class="numero">Cantidad</th>
+                <th>Reportado por</th>
+                <th>Estado</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tabla-reportes"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== Ventana de revisión ===================== -->
+  <dialog id="dialogo-revision" class="dialogo">
+    <div class="dialogo-cabecera">
+      <div>
+        <p class="antetitulo" id="revision-numero"></p>
+        <h2 class="titulo" id="revision-titulo"></h2>
+        <p class="texto-gris" id="revision-descripcion"></p>
+      </div>
+      <button type="button" class="boton-icono" id="cerrar-revision" title="Cerrar">✕</button>
+    </div>
+
+    <dl class="datos-clave">
+      <div><dt>OP</dt><dd id="revision-op"></dd></div>
+      <div><dt>Área</dt><dd id="revision-area"></dd></div>
+      <div><dt>Reportado por</dt><dd id="revision-reportado"></dd></div>
+      <div><dt>Estado</dt><dd id="revision-estado"></dd></div>
+    </dl>
+
+    <h3 class="subtitulo">Entra al inventario</h3>
+    <div class="tabla-contenedor">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Ítem</th>
+            <th>Descripción</th>
+            <th class="numero">Cantidad</th>
+            <th class="numero">Existencia actual</th>
+            <th class="numero">Quedará</th>
+          </tr>
+        </thead>
+        <tbody id="revision-entrada"></tbody>
+      </table>
+    </div>
+
+    <h3 class="subtitulo">Sale del inventario <small>· lista de materiales × cantidad entregada</small></h3>
+    <div class="tabla-contenedor">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Ítem</th>
+            <th>Descripción</th>
+            <th class="numero">Consumo</th>
+            <th class="numero">Existencia</th>
+            <th class="numero">Quedará</th>
+            <th>Disponibilidad</th>
+          </tr>
+        </thead>
+        <tbody id="revision-salidas"></tbody>
+      </table>
+    </div>
+
+    <!-- Mensaje informativo: faltan existencias, o el reporte ya fue revisado -->
+    <p id="revision-nota" class="aviso separado" hidden></p>
+
+    <!-- Solo se muestra si el reporte está pendiente -->
+    <form id="formulario-decision" class="formulario separado">
+      <label class="campo">
+        <span>Motivo del rechazo</span>
+        <textarea name="motivo" maxlength="255" placeholder="Obligatorio solo si vas a rechazar"></textarea>
+      </label>
+      <div id="aviso-revision" class="aviso error" hidden></div>
+      <div class="acciones">
+        <button type="button" class="boton boton-exito" id="boton-aprobar">Aprobar entrega</button>
+        <button type="button" class="boton boton-peligro" id="boton-rechazar">Rechazar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <footer id="pie" class="pie"></footer>
+
+  <script src="/scripts/comun.js"></script>
+  <script src="/scripts/aprobaciones.js"></script>
+</body>
+</html>

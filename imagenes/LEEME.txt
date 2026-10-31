@@ -1,0 +1,2 @@
+Coloca aquí el logo oficial con el nombre logo.png (alto recomendado: 80 px).
+Mientras no exista, el sistema muestra el texto "RYMEL" en su lugar.

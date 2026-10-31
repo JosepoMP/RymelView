@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <!-- Hace que la página se vea bien en tablet y celular -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Iniciar sesión · RymelView</title>
+  <link rel="stylesheet" href="/estilos/estilos.css">
+</head>
+<body>
+  <main class="login">
+    <!-- Lado izquierdo: panel azul con el mensaje institucional -->
+    <section class="login-panel">
+      <p class="antetitulo">RymelView · Rymel S.A.S.</p>
+      <h1 class="titulo">
+        Inventario y producción.<br>
+        <span>Todo el proceso en un solo lugar.</span>
+      </h1>
+      <p>
+        Reporta entregas por área, aprueba movimientos de inventario y consulta
+        el avance de cada orden de producción.
+      </p>
+    </section>
+
+    <!-- Lado derecho: el formulario -->
+    <section class="login-zona">
+      <div class="tarjeta login-tarjeta">
+        <img id="logo" src="/imagenes/logo.png" alt="Rymel SAS" height="40">
+        <p class="antetitulo">RymelView · Acceso</p>
+        <h2 class="titulo">Iniciar sesión</h2>
+
+        <form id="formulario-login" class="formulario">
+          <label class="campo">
+            <span>Usuario</span>
+            <input name="usuario" autocomplete="username" required autofocus>
+          </label>
+          <label class="campo">
+            <span>Contraseña</span>
+            <input name="contrasena" type="password" autocomplete="current-password" required>
+          </label>
+          <!-- Aquí aparece el mensaje de error; empieza oculto (hidden) -->
+          <div id="aviso-login" class="aviso error" hidden></div>
+          <button class="boton" type="submit">Ingresar ↗</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer id="pie" class="pie"></footer>
+
+  <script src="/scripts/comun.js"></script>
+  <script src="/scripts/login.js"></script>
+</body>
+</html>

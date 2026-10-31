@@ -1,0 +1,1072 @@
+/* =====================================================================
+   estilos.css
+   Todo el diseño del sistema en un solo archivo, basado en la web de Rymel SAS.
+   Secciones:
+     1. Colores            9. Avisos
+     2. Base               10. Tarjetas y columnas
+     3. Encabezado y menú  11. Pestañas
+     4. Secciones          12. Indicadores
+     5. Pie de página      13. Ventanas (diálogos)
+     6. Botones            14. Panel: barras y matriz
+     7. Formularios        15. Árbol de estructura
+     8. Tablas y etiquetas 16. Asistente "Nuevo producto"
+                           17. Login
+                           18. Pantallas pequeñas (tablet y celular)
+   ===================================================================== */
+
+
+/* 
+   1. Colores
+   Se definen una sola vez como "variables" y se usan con var(--nombre).
+   Para cambiar un color en todo el sistema, basta cambiarlo aquí
+   (patrón GRASP Variaciones protegidas).
+    */
+:root {
+  --primario: #1C1660;          /* Azul índigo de Rymel: títulos, botones, menú */
+  --primario-hover: #2D2687;    /* El mismo azul, un poco más claro, al pasar el mouse */
+  --primario-suave: #E7E6F3;    /* Fondo de la opción activa del menú */
+  --amarillo: #FFE600;          /* Estado "Pendiente" */
+  --fondo: #FFFFFF;
+  --fondo-gris: #F2F3F9;        /* Gris lavanda de las secciones alternas */
+  --borde: #DCDDE6;
+  --texto-gris: #5B5F6E;
+  --verde: #3C8D6E;             /* Aprobado, entradas */
+  --verde-suave: #E9F4EF;
+  --azul: #4A90E2;              /* En proceso */
+  --azul-suave: #E4EEFB;
+  --azul-oscuro: #1F5FA8;
+  --rojo: #E05A52;              /* Rechazado, errores, salidas */
+  --rojo-suave: #FDECEB;
+}
+
+
+/* 
+   2. Base
+    */
+
+/* box-sizing: el ancho de un elemento incluye su relleno y su borde (más fácil de calcular). */
+* {
+  box-sizing: border-box;
+}
+
+/* El atributo hidden siempre oculta, aunque otra regla le ponga display. */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;               /* Permite empujar el pie de página hasta abajo */
+  flex-direction: column;
+  font-family: "Segoe UI", Arial, sans-serif;   /* Fuentes que ya trae el computador */
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--primario);
+  background: var(--fondo);
+}
+
+a {
+  color: inherit;
+}
+
+/* Centra el contenido y limita su ancho en pantallas grandes. */
+.contenedor {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.texto-gris {
+  color: var(--texto-gris);
+}
+
+/* Los códigos (MP-0001, NUCLEO-001...) nunca se parten en dos líneas. */
+.sin-salto {
+  white-space: nowrap;
+}
+
+.separado {
+  margin-top: 32px;
+}
+
+
+/* 
+   3. Encabezado y menú (lo dibuja comun.js en cada página)
+    */
+.encabezado {
+  position: sticky;            /* Se queda arriba al bajar por la página */
+  top: 0;
+  z-index: 10;
+  background: var(--fondo);
+  border-bottom: 1px solid var(--borde);
+}
+
+.encabezado-barra {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 8px 32px;
+  min-height: 72px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 32px;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+/* Nombre del software al lado del logo */
+.marca-nombre {
+  padding-left: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-left: 1px solid var(--borde);
+}
+
+.marca img {
+  height: 40px;
+  display: block;
+}
+
+/* Se muestra si todavía no existe imagenes/logo.png */
+.logo-texto {
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.menu {
+  flex: 1;                     /* Ocupa el espacio libre entre el logo y el usuario */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.menu a {
+  padding: 8px 12px;
+  font-size: 0.88rem;
+  text-decoration: none;
+  white-space: nowrap;
+  border-radius: 999px;
+}
+
+.menu a:hover {
+  background: var(--fondo-gris);
+}
+
+.menu a.activo {
+  background: var(--primario-suave);
+  font-weight: 600;
+}
+
+.usuario {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.usuario-datos {
+  text-align: right;
+  line-height: 1.25;
+}
+
+.usuario-datos strong {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.usuario-datos small {
+  font-size: 0.75rem;
+  color: var(--texto-gris);
+}
+
+
+/* 
+   4. Secciones y títulos (alternan fondo blanco y lavanda, como la web)
+    */
+main {
+  flex: 1;                     /* Ocupa todo el alto libre: el pie queda abajo */
+}
+
+.seccion {
+  padding: 56px 0;
+}
+
+.seccion-gris {
+  background: var(--fondo-gris);
+}
+
+.antetitulo {
+  margin: 0 0 16px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.titulo {
+  margin: 0;
+  font-size: 2.4rem;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.titulo span {
+  color: var(--texto-gris);
+}
+
+/* Título a la izquierda y descripción a la derecha */
+.cabecera {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  align-items: end;
+}
+
+/* Solo el párrafo hijo directo (la descripción de la derecha), no el antetítulo */
+.cabecera > p {
+  margin: 0;
+  color: var(--texto-gris);
+  font-size: 0.95rem;
+}
+
+.subtitulo {
+  margin: 32px 0 8px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.subtitulo small {
+  font-weight: 400;
+  color: var(--texto-gris);
+}
+
+
+/* 
+   5. Pie de página
+    */
+.pie {
+  background: var(--primario);
+  color: #FFFFFF;
+  font-size: 0.85rem;
+}
+
+.pie .contenedor {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+.pie span:last-child {
+  opacity: 0.7;
+}
+
+
+/* 
+   6. Botones (forma de píldora, como en la web de Rymel)
+    */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;            /* Tamaño cómodo para tocar en una tablet */
+  padding: 0 22px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: var(--primario);
+  border: 1px solid var(--primario);
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;         /* El texto del botón no se parte en dos líneas */
+  cursor: pointer;
+}
+
+.boton:hover {
+  background: var(--primario-hover);
+}
+
+.boton:disabled,
+.boton.deshabilitado {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.boton-secundario {
+  color: var(--primario);
+  background: transparent;
+}
+
+.boton-secundario:hover {
+  background: var(--fondo-gris);
+}
+
+.boton-exito {
+  background: var(--verde);
+  border-color: var(--verde);
+}
+
+.boton-peligro {
+  background: var(--rojo);
+  border-color: var(--rojo);
+}
+
+.boton-pequeno {
+  min-height: 34px;
+  padding: 0 16px;
+  font-size: 0.82rem;
+}
+
+/* Botón redondo con un símbolo (✕ para cerrar o quitar) */
+.boton-icono {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--texto-gris);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.boton-icono:hover {
+  background: var(--rojo-suave);
+  color: var(--rojo);
+}
+
+/* Fila de botones */
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+
+/* 
+   7. Formularios
+   Cada campo se escribe así:
+     <label class="campo"><span>Nombre</span><input name="nombre"></label>
+    */
+.formulario {
+  display: grid;
+  gap: 16px;
+}
+
+.campo {
+  display: grid;
+  gap: 4px;
+  min-width: 0;                /* Evita que un texto largo estire el campo */
+}
+
+/* El texto del campo (el primer <span>) */
+.campo > span {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* Texto de ayuda debajo del campo */
+.campo small,
+.ayuda {
+  font-size: 0.75rem;
+  color: var(--texto-gris);
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 14px;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--primario);
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+}
+
+textarea {
+  min-height: 90px;
+  padding: 8px 14px;
+  resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--primario);
+  outline-offset: 1px;
+}
+
+/* Campo pequeño para cantidades dentro de una tabla */
+.entrada-numero {
+  width: 110px;
+  text-align: right;
+}
+
+/* Campo grande para escribir cantidades en la planta (tablet) */
+.entrada-grande {
+  min-height: 56px;
+  font-size: 1.4rem;
+}
+
+/* Fila de filtros encima de una tabla */
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 16px;
+}
+
+.filtros .campo {
+  min-width: 180px;
+}
+
+/* Un filtro que ocupa todo el espacio libre de la fila (ej. buscar) */
+.filtros .campo-ancho {
+  flex: 1;
+  min-width: 240px;
+}
+
+
+/* 
+   8. Tablas y etiquetas
+    */
+
+/* Si la tabla no cabe (tablet), se desplaza de lado sin romper la página. */
+.tabla-contenedor {
+  overflow-x: auto;
+  margin-top: 16px;
+  border-top: 1px solid var(--borde);
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.tabla th {
+  padding: 14px 8px;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--borde);
+}
+
+.tabla td {
+  padding: 14px 8px;
+  color: var(--texto-gris);
+  vertical-align: middle;
+  border-bottom: 1px solid var(--borde);
+}
+
+.tabla td strong {
+  color: var(--primario);
+  white-space: nowrap;
+}
+
+/* Columnas de números: a la derecha y con cifras del mismo ancho */
+.tabla .numero {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.tabla tbody tr:hover {
+  background: var(--fondo-gris);
+}
+
+/* Fila con el mensaje "No hay resultados" */
+.tabla .vacia {
+  padding: 32px;
+  text-align: center;
+}
+
+/* Fila resaltada (ej. la fila de tu área en el detalle de una OP) */
+.tabla tr.resaltada {
+  background: var(--primario-suave);
+}
+
+/* Tabla en la que se puede hacer clic en una fila */
+.tabla-seleccionable tbody tr {
+  cursor: pointer;
+}
+
+/* Etiqueta pequeña de color. Se usa así: <span class="etiqueta aprobado">Aprobado</span> */
+.etiqueta {
+  display: inline-block;
+  padding: 2px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  border-radius: 3px;
+}
+
+/* Estados */
+.etiqueta.pendiente { background: var(--amarillo); color: var(--primario); }
+.etiqueta.proceso   { background: var(--azul);     color: #FFFFFF; }
+.etiqueta.aprobado  { background: var(--verde);    color: #FFFFFF; }
+.etiqueta.rechazado { background: var(--rojo);     color: #FFFFFF; }
+
+/* Tipos de ítem */
+.etiqueta.mp { background: var(--fondo-gris); color: var(--texto-gris); border: 1px solid var(--borde); }
+.etiqueta.pp { background: var(--azul-suave); color: var(--azul-oscuro); }
+.etiqueta.pt { background: var(--primario);   color: #FFFFFF; }
+
+/* Movimientos de inventario */
+.etiqueta.entrada { background: var(--verde-suave); color: var(--verde); }
+.etiqueta.salida  { background: var(--rojo-suave);  color: var(--rojo); }
+
+
+/* 
+   9. Avisos (mensajes de error o de éxito)
+    */
+.aviso {
+  padding: 16px;
+  font-size: 0.92rem;
+  background: var(--fondo-gris);
+  border-left: 4px solid var(--azul);
+  border-radius: 6px;
+}
+
+.aviso.error {
+  background: var(--rojo-suave);
+  border-left-color: var(--rojo);
+}
+
+.aviso.exito {
+  background: var(--verde-suave);
+  border-left-color: var(--verde);
+}
+
+
+/* 
+   10. Tarjetas y columnas
+    */
+.tarjeta {
+  scroll-margin-top: 140px;    /* Al bajar hasta una tarjeta, no queda tapada por el encabezado */
+  padding: 32px;
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+}
+
+/* Mensaje en un recuadro punteado cuando todavía no hay nada que mostrar */
+.estado-vacio {
+  padding: 56px 32px;
+  text-align: center;
+  color: var(--texto-gris);
+  border: 1px dashed var(--borde);
+  border-radius: 6px;
+}
+
+/* Formulario a la izquierda (1 parte) y tabla a la derecha (2 partes) */
+.columnas {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(0, 2fr);
+  gap: 32px;
+  align-items: start;
+}
+
+/* Dos columnas casi iguales */
+.mitades {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 32px;
+  align-items: start;
+}
+
+/* Dos campos lado a lado dentro de un formulario */
+.rejilla-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Lista de datos: título pequeño arriba y valor debajo */
+.datos-clave {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin: 16px 0 0;
+}
+
+.datos-clave dt {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.datos-clave dd {
+  margin: 4px 0 0;
+  color: var(--texto-gris);
+}
+
+
+/* 
+   11. Pestañas
+    */
+.pestanas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 32px;
+}
+
+.pestana {
+  min-height: 40px;
+  padding: 0 20px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--primario);
+  background: transparent;
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.pestana.activa {
+  color: #FFFFFF;
+  background: var(--primario);
+  border-color: var(--primario);
+}
+
+
+/* 
+   12. Indicadores (números grandes con su título)
+    */
+.indicadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 16px;
+}
+
+.indicador {
+  padding: 16px;
+  background: var(--fondo-gris);
+  border-radius: 6px;
+}
+
+.indicador span {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.indicador strong {
+  display: block;
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.indicador small {
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+
+.indicador.destacado {
+  color: #FFFFFF;
+  background: var(--primario);
+}
+
+
+/* 
+   13. Ventanas (la etiqueta <dialog> de HTML)
+    */
+.dialogo {
+  width: min(800px, calc(100vw - 32px));   /* 800px, o el ancho de la pantalla si es menor */
+  max-height: calc(100vh - 32px);
+  padding: 32px;
+  color: var(--primario);
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 12px 40px rgba(28, 22, 96, 0.25);
+}
+
+.dialogo.ancho {
+  width: min(1080px, calc(100vw - 32px));
+}
+
+.dialogo.angosto {
+  width: min(460px, calc(100vw - 32px));
+}
+
+/* El fondo oscuro que queda detrás de la ventana */
+.dialogo::backdrop {
+  background: rgba(28, 22, 96, 0.45);
+}
+
+.dialogo-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 16px;
+}
+
+.dialogo-cabecera .titulo {
+  font-size: 1.6rem;
+}
+
+
+/* 
+   14. Panel del supervisor: barras de avance y matriz OP x área
+    */
+.barra-avance {
+  height: 6px;
+  overflow: hidden;
+  background: var(--borde);
+  border-radius: 3px;
+}
+
+/* El relleno verde: su ancho (en %) lo pone el JavaScript */
+.barra-avance div {
+  height: 100%;
+  background: var(--verde);
+}
+
+.matriz th,
+.matriz td {
+  text-align: center;
+}
+
+.matriz th:first-child,
+.matriz td:first-child {
+  text-align: left;
+}
+
+.celda-estado {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  min-width: 110px;
+  font-size: 0.82rem;
+}
+
+.celda-estado .barra-avance {
+  width: 100%;
+}
+
+
+/* 
+   15. Árbol de estructura (PT -> PP -> MP)
+   Es una lista <ul> dentro de otra. Cada rama se abre y cierra con
+   <details> y <summary>, que el navegador maneja sin JavaScript.
+    */
+.arbol,
+.arbol ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.arbol ul {
+  padding-left: 40px;          /* Cada nivel se corre a la derecha */
+}
+
+.arbol li {
+  position: relative;
+  padding-top: 8px;
+}
+
+/* Las líneas que unen cada hijo con su padre: una vertical y una horizontal.
+   ::before y ::after son "elementos de mentira" que crea el CSS solo para dibujar. */
+.arbol ul > li::before,
+.arbol ul > li::after {
+  content: "";
+  position: absolute;
+  left: -24px;
+  border: 0 solid var(--borde);
+}
+
+.arbol ul > li::before {        /* Línea vertical */
+  top: 0;
+  height: 100%;
+  border-left-width: 2px;
+}
+
+.arbol ul > li:last-child::before {
+  height: 38px;                /* En el último hijo, la línea llega solo hasta su tarjeta */
+}
+
+.arbol ul > li::after {         /* Línea horizontal hacia la tarjeta */
+  top: 38px;
+  width: 24px;
+  border-top-width: 2px;
+}
+
+.arbol summary {
+  list-style: none;            /* Quita el triángulo que trae el navegador */
+  cursor: pointer;
+}
+
+.arbol summary:hover .nodo {
+  box-shadow: 0 2px 10px rgba(28, 22, 96, 0.08);
+}
+
+.arbol summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Nuestro propio triángulo (solo en las ramas que tienen hijos): gira cuando está abierta */
+.arbol summary .nodo-flecha::before {
+  content: "▸";
+  display: inline-block;
+  transition: transform 0.15s;
+}
+
+.arbol details[open] > summary .nodo-flecha::before {
+  transform: rotate(90deg);
+}
+
+/* La tarjeta de cada ítem del árbol */
+.nodo {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  min-height: 60px;
+  padding: 8px 16px;
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  border-left: 4px solid var(--texto-gris);   /* Gris = materia prima */
+  border-radius: 6px;
+}
+
+.nodo.pt {
+  background: var(--fondo-gris);
+  border-left-color: var(--primario);       /* Azul oscuro = producto terminado */
+}
+
+.nodo.pp {
+  border-left-color: var(--azul);           /* Azul claro = producto en proceso */
+}
+
+.nodo-flecha,
+.nodo-origen,
+.nodo-descripcion {
+  color: var(--texto-gris);
+}
+
+.nodo-origen {
+  font-size: 0.78rem;
+}
+
+.nodo-cantidad {
+  display: grid;
+  text-align: right;
+}
+
+.nodo-cantidad small {
+  font-size: 0.72rem;
+  color: var(--texto-gris);
+}
+
+.leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin: 16px 0 24px;
+  font-size: 0.8rem;
+  color: var(--texto-gris);
+}
+
+
+/* 
+   16. Asistente "Nuevo producto": un bloque (tarjeta) por área
+    */
+.bloques-partes {
+  display: grid;
+  /* Tantas columnas de mínimo 440px como quepan (2 en computador, 1 en tablet) */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
+  gap: 16px;
+}
+
+.bloque-parte {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+/* Encabezado del bloque: etiqueta, número y nombre del área en una línea */
+.bloque-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.bloque-parte h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Fila con candado: conexión fija con otra área */
+.fila-fija td:first-child {
+  color: var(--texto-gris);
+}
+
+
+/* 
+   17. Login: panel azul a la izquierda y formulario a la derecha
+    */
+.login {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+}
+
+.login-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 56px;
+  color: #FFFFFF;
+  background: var(--primario);
+}
+
+.login-panel .titulo {
+  font-weight: 300;
+}
+
+.login-panel .titulo span {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.login-panel p:last-child {
+  max-width: 34ch;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.login-zona {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  background: var(--fondo-gris);
+}
+
+.login-tarjeta {
+  width: 100%;
+  max-width: 400px;
+  border: none;
+  box-shadow: 0 2px 10px rgba(28, 22, 96, 0.08);
+}
+
+.login-tarjeta .titulo {
+  margin-bottom: 32px;
+  font-size: 1.6rem;
+}
+
+.login-tarjeta .antetitulo {
+  margin-top: 32px;
+}
+
+.login-tarjeta .boton {
+  width: 100%;
+}
+
+
+/* 
+   18. Pantallas pequeñas
+   @media aplica las reglas solo cuando la pantalla mide como máximo ese ancho.
+    */
+
+/* Menos de 1400px: el menú pasa a su propia fila, debajo del logo y el usuario. */
+@media (max-width: 1399px) {
+  .menu {
+    order: 3;
+    flex-basis: 100%;
+  }
+}
+
+/* Tablet: una sola columna. */
+@media (max-width: 900px) {
+  .contenedor,
+  .encabezado-barra {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .seccion {
+    padding: 32px 0;
+  }
+
+  .cabecera,
+  .columnas,
+  .mitades,
+  .login {
+    grid-template-columns: 1fr;
+  }
+
+  .login-panel {
+    padding: 32px 16px;
+  }
+
+  .titulo {
+    font-size: 1.9rem;
+  }
+}
+
+/* Celular */
+@media (max-width: 560px) {
+  .rejilla-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .usuario-datos {
+    display: none;
+  }
+
+  .dialogo,
+  .tarjeta {
+    padding: 16px;
+  }
+
+  .arbol ul {
+    padding-left: 24px;
+  }
+
+  .arbol ul > li::before,
+  .arbol ul > li::after {
+    left: -16px;
+  }
+
+  .arbol ul > li::after {
+    width: 16px;
+  }
+
+  /* La cantidad pasa debajo de la descripción para que quepa */
+  .nodo {
+    grid-template-columns: 16px minmax(0, 1fr);
+  }
+
+  .nodo-cantidad {
+    grid-column: 2;
+    text-align: left;
+  }
+}

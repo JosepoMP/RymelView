@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel de producción · RymelView</title>
+  <link rel="stylesheet" href="/estilos/estilos.css">
+</head>
+<body>
+  <header id="encabezado" class="encabezado"></header>
+
+  <main>
+    <section class="seccion seccion-gris">
+      <div class="contenedor">
+        <div class="cabecera">
+          <div>
+            <p class="antetitulo">Módulo 3 · Supervisión</p>
+            <h1 class="titulo">Panel de producción.<br><span>Estado por OP y área.</span></h1>
+          </div>
+          <p>
+            Pendiente: el área aún no entrega. En proceso: ya entregó una parte.
+            Aprobado: completó lo requerido. Los rechazos se cuentan aparte.
+          </p>
+        </div>
+
+        <div class="filtros separado">
+          <label class="campo">
+            <span>Orden de producción</span>
+            <select id="filtro-op"></select>
+          </label>
+          <label class="campo">
+            <span>Área</span>
+            <select id="filtro-area"></select>
+          </label>
+          <label class="campo">
+            <span>Estado</span>
+            <select id="filtro-estado">
+              <option value="">Todos</option>
+              <option value="PENDIENTE">Pendiente</option>
+              <option value="EN_PROCESO">En proceso</option>
+              <option value="APROBADO">Aprobado</option>
+            </select>
+          </label>
+          <button type="button" class="boton boton-secundario" id="boton-actualizar">Actualizar</button>
+        </div>
+
+        <!-- Indicadores: el id de cada número coincide con la clave que envía el servidor -->
+        <div class="indicadores separado">
+          <div class="indicador"><span>Pendiente</span><strong id="indicador-PENDIENTE">–</strong><small>áreas por OP</small></div>
+          <div class="indicador"><span>En proceso</span><strong id="indicador-EN_PROCESO">–</strong><small>áreas por OP</small></div>
+          <div class="indicador"><span>Aprobado</span><strong id="indicador-APROBADO">–</strong><small>áreas por OP</small></div>
+          <div class="indicador destacado"><span>Por revisar</span><strong id="indicador-REPORTES_EN_REVISION">–</strong><small>reportes</small></div>
+          <div class="indicador"><span>Rechazados</span><strong id="indicador-REPORTES_RECHAZADOS">–</strong><small>reportes</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <div class="contenedor">
+        <p class="antetitulo">Vista por OP y área</p>
+        <!-- La matriz: una fila por OP y una columna por área (las dibuja panel.js) -->
+        <div class="tabla-contenedor">
+          <table class="tabla matriz">
+            <thead id="matriz-cabecera"></thead>
+            <tbody id="matriz-cuerpo"></tbody>
+          </table>
+        </div>
+
+        <h2 class="subtitulo separado">Detalle</h2>
+        <div class="tabla-contenedor">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>OP</th>
+                <th>Área</th>
+                <th>Referencia</th>
+                <th class="numero">Requeridas</th>
+                <th class="numero">Aprobadas</th>
+                <th class="numero">En revisión</th>
+                <th class="numero">Rechazos</th>
+                <th class="numero">Avance</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-detalle"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="pie" class="pie"></footer>
+
+  <script src="/scripts/comun.js"></script>
+  <script src="/scripts/panel.js"></script>
+</body>
+</html>
