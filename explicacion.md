@@ -83,6 +83,48 @@ Solo se usó lo que **Python trae incluido**: nada de `pip install` ni framework
 - **¿Por qué no se usó Singleton?** El servidor atiende con varios hilos a la vez y SQLite no comparte una conexión entre hilos, así que cada petición abre la suya.
 - **¿Qué falta para usarlo en la planta?** HTTPS, un servidor en la red de la empresa y pruebas con usuarios reales.
 
+## 10. El diagrama UML en el código
+
+Cada **clase** del diagrama es una **tabla** de la base de datos. Cada **relación** es una
+**llave foránea**: un campo `_id` que apunta a otra tabla, marcado con `REFERENCES` en
+[base_datos.py](base_datos.py). Así se lee cada fila de esta tabla:
+- **Llave foránea:** dónde se declara la relación.
+- **Dónde se usa:** la función que la aprovecha.
+
+| Relación del diagrama | Llave foránea (`base_datos.py`) | Dónde se usa |
+|---|---|---|
+| Área *tiene asignados* Usuarios | `usuarios.area_id` (línea 119) | `crear_reporte` toma el área del usuario que inició sesión ([entregas.py:67](entregas.py:67)) |
+| Usuario *inicia* Sesiones | `sesiones.usuario_id` (línea 124) | `iniciar_sesion` crea la sesión ([servidor.py:144](servidor.py:144)); `buscar_usuario_de_sesion` la lee en cada petición ([servidor.py:124](servidor.py:124)) |
+| Área *ejecuta* Referencias | `referencias.area_id` (línea 141) | `crear_referencia` ([catalogo.py:274](catalogo.py:274)): el código lleva el nombre del área, ej. `NUCLEO-001` |
+| Ítem *es producido por* Referencia | `referencias.item_id` con `UNIQUE` (línea 142) | `validar_item_propio` ([catalogo.py:321](catalogo.py:321)): el ítem debe ser del tipo del área y no tener otra referencia |
+| Referencia ◆ *define* LíneaMaterial | `lineas_material.referencia_id` (línea 148) | `guardar_materiales` ([catalogo.py:310](catalogo.py:310)) |
+| Ítem *se consume en* LíneaMaterial | `lineas_material.item_id` (línea 149) | `validar_materiales` ([catalogo.py:332](catalogo.py:332)) y `contiene_item` ([catalogo.py:360](catalogo.py:360)), que evita ciclos |
+| Cliente *solicita* Órdenes | `ordenes.cliente_id` (línea 164) | `crear_orden` ([ordenes.py:165](ordenes.py:165)) revisa que el cliente exista |
+| Referencia *se fabrica en* Orden | `ordenes.referencia_id` (línea 163) | `buscar_ensamble` ([ordenes.py:112](ordenes.py:112)): solo se aceptan productos terminados |
+| Orden ◆ *congela* Requerimientos | `requerimientos.orden_id` (línea 174) | `crear_orden` guarda la OP y sus requerimientos juntos, calculados por `calcular_requerimientos` ([ordenes.py:62](ordenes.py:62)) |
+| Área *responde por* Requerimiento | `requerimientos.area_id` (línea 175) | `requerimiento_del_area` ([entregas.py:27](entregas.py:27)) |
+| Orden ◆ *recibe* Reportes | `reportes.orden_id` (línea 184) | `crear_reporte` ([entregas.py:67](entregas.py:67)) y `avance_del_area` ([entregas.py:43](entregas.py:43)) |
+| Área *emite* Reportes | `reportes.area_id` (línea 185) | `crear_reporte`: el área sale de la sesión, el operario no la escribe |
+| Ítem *altera su existencia por* Movimientos | `movimientos.item_id` (línea 200) | `mover_existencia` ([inventario.py:37](inventario.py:37)): cambia la existencia y guarda el movimiento juntos |
+| Reporte *genera* Movimientos | `movimientos.reporte_id` (línea 205) | `aprobar_reporte` ([entregas.py:200](entregas.py:200)) le pasa el reporte a `registrar_entrada` y `registrar_salida` |
+| Orden *registra* Movimientos | `movimientos.orden_id` (línea 204) | `aprobar_reporte`. Las compras de materia prima no tienen OP: por eso es `0..1` |
+| Usuario *registra* Movimientos | `movimientos.usuario_id` (línea 206) | `registrar_entrada` y `registrar_salida` ([inventario.py:27](inventario.py:27)) guardan quién hizo el cambio |
+
+**Los métodos del diagrama** son funciones de Python, porque el proyecto no usa clases:
+
+| Método en el diagrama | Función real |
+|---|---|
+| `Usuario.cifrar_contrasena()` | `cifrar_contrasena` ([base_datos.py:83](base_datos.py:83)) |
+| `Reporte.calcular_consumos()` | `calcular_consumos` ([entregas.py:161](entregas.py:161)) |
+| `Sesion.es_valida()` | `buscar_usuario_de_sesion` ([servidor.py:124](servidor.py:124)) |
+| `Referencia.validar_nemotecnia()` | `tiene_formato` ([catalogo.py:66](catalogo.py:66)) |
+| `Referencia.validar_ciclos()` | `contiene_item` ([catalogo.py:360](catalogo.py:360)) |
+| `Cliente.validar_nit()` | `nit_valido` ([ordenes.py:32](ordenes.py:32)) |
+| `Orden.calcular_avance()` | `avance_del_area` ([entregas.py:43](entregas.py:43)) |
+
+**Rombo relleno (◆) = composición:** la parte no existe sin el todo. No hay líneas de materiales
+sin referencia, ni requerimientos o reportes sin OP.
+
 ---
 
 # Notas por entrega
